@@ -40,7 +40,7 @@
 
         if ($Class_code != NULL || $Class_code != FALSE){
             $Vehicles = get_vehicles_by_class($Class_code);
-        } else if ($Type_code!= NULL || $Type_code) {
+        } else if ($Type_code!= NULL || $Type_code != FALSE) {
             $Vehicles = get_vehicles_by_type($Type_code);
         } else if ($Make != NULL | $Make != FALSE) {
             $Vehicles = get_vehicles_by_make($Make);
