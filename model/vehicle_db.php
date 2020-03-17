@@ -190,9 +190,9 @@ $Class_code = filter_input(INPUT_GET, 'Class_code');
     $Make = filter_input(INPUT_GET, 'Make');
     $Sort = filter_input(INPUT_GET, 'Sort');
 
-if (($Class_code != NULL || $Class_code != FALSE) && ($Type_code != NULL || $Type_code != FALSE) && ($Make != NULL || $Make != FALSE)) {
+if (($Class_code != 0 || $Class_code != FALSE) && ($Type_code != 0 || $Type_code != FALSE) && ($Make != 0 || $Make != FALSE)) {
 
-function get_vehicles_by_selection($Class_code,$Type_Code,$Make) {
+function get_vehicles_by_selection($Class_code,$Type_code,$Make) {
     global $db;
     $Class_code = filter_input(INPUT_GET, 'Class_code');
     $Type_code = filter_input(INPUT_GET, 'Type_code');
@@ -201,17 +201,17 @@ function get_vehicles_by_selection($Class_code,$Type_Code,$Make) {
     if ($Sort == 'year') {
         
        $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-        LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = :Class_Code AND V.Type_code = :Type_code AND V.Make = :Make ORDER BY V.Vehicle_year DESC";   
+        LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = ? AND V.Type_code = ? AND V.Make = ? ORDER BY V.Vehicle_year DESC";   
 } else {
     $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-        LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = :Class_Code AND V.Type_code = :Type_code AND V.Make = :Make ORDER BY V.Price DESC";   
+    LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = ? AND V.Type_code = ? AND V.Make = ? ORDER BY V.Price DESC";   
     
 }
 
     $statement = $db->prepare($query1);
-    $statement->bindValue(":Class_code", $Class_code);
-    $statement->bindValue(":Type_code", $Type_code);
-    $statement->bindValue(":Make", $Make);
+    $statement->bindValue(1, $Class_code, PDO::PARAM_INT);
+    $statement->bindValue(2, $Type_code,PDO::PARAM_INT );
+    $statement->bindValue(3, $Make, PDO::PARAM_STR);
     $statement->execute();
     $all_vehicles_list = $statement->fetchAll();
     $statement->closeCursor();
@@ -219,159 +219,170 @@ function get_vehicles_by_selection($Class_code,$Type_Code,$Make) {
 }    
 
 
-} else if (($Class_code == NULL || $Class_code == FALSE) && ($Type_code != NULL || $Type_code != FALSE) && ($Make != NULL || $Make != FALSE)) {
-    function get_vehicles_by_selection($Type_Code,$Make) {
+} else if (($Class_code == 0 || $Class_code == FALSE) && ($Type_code != 0 || $Type_code != FALSE) && ($Make != 0 || $Make != FALSE)) {
+    function get_vehicles_by_selection($Type_code,$Make) {
         global $db;
+        $Class_code = filter_input(INPUT_GET, 'Class_code');
         $Type_code = filter_input(INPUT_GET, 'Type_code');
         $Make = filter_input(INPUT_GET, 'Make');
         $Sort = filter_input(INPUT_GET, 'Sort');
         if ($Sort == 'year') {
             
            $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-            LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Type_code = :Type_code AND V.Make = :Make ORDER BY V.Vehicle_year DESC";   
+            LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Type_code = ? AND V.Make = ? ORDER BY V.Vehicle_year DESC";   
     } else {
         $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-            LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Type_code = :Type_code AND V.Make = :Make ORDER BY V.Price DESC";   
+            LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Type_code = ? AND V.Make = ? ORDER BY V.Price DESC";   
         
     }
     
         $statement = $db->prepare($query1);
-        $statement->bindValue(":Type_code", $Type_code);
-        $statement->bindValue(":Make", $Make);
+        $statement->bindValue(1, $Type_code,PDO::PARAM_INT );
+        $statement->bindValue(2, $Make, PDO::PARAM_STR);
         $statement->execute();
         $all_vehicles_list = $statement->fetchAll();
         $statement->closeCursor();
         return $all_vehicles_list;
     }    
 
-} else if (($Class_code == NULL || $Class_code == FALSE) && ($Type_code == NULL || $Type_code == FALSE) && ($Make != NULL || $Make != FALSE) ) {
+} else if (($Class_code == 0 || $Class_code == FALSE) && ($Type_code == 0 || $Type_code == FALSE) && ($Make != 0 || $Make != FALSE) ) {
 
 function get_vehicles_by_selection($Make) {
     global $db;
+    $Class_code = filter_input(INPUT_GET, 'Class_code');
+    $Type_code = filter_input(INPUT_GET, 'Type_code');
     $Make = filter_input(INPUT_GET, 'Make');
     $Sort = filter_input(INPUT_GET, 'Sort');
     if ($Sort == 'year') {
         
        $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-        LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Make = :Make ORDER BY V.Vehicle_year DESC";   
+        LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Make = ? ORDER BY V.Vehicle_year DESC";   
 } else {
     $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-        LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Make = :Make ORDER BY V.Price DESC";   
+        LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Make = ? ORDER BY V.Price DESC";   
     
 }
 
     $statement = $db->prepare($query1);
-    $statement->bindValue(":Make", $Make);
+    $statement->bindValue(1, $Make, PDO::PARAM_STR);
     $statement->execute();
     $all_vehicles_list = $statement->fetchAll();
     $statement->closeCursor();
     return $all_vehicles_list;
 }    
-} else if (($Class_code != NULL || $Class_code != FALSE) && ($Type_code == NULL || $Type_code == FALSE) && ($Make != NULL || $Make != FALSE) ) {
+} else if (($Class_code != 0 || $Class_code != FALSE) && ($Type_code == 0 || $Type_code == FALSE) && ($Make != 0 || $Make != FALSE) ) {
 
-    function get_vehicles_by_selection($Make) {
+    function get_vehicles_by_selection($Class_code,$Type_code,$Make) {
         global $db;
-        $Make = filter_input(INPUT_GET, 'Make');
         $Class_code = filter_input(INPUT_GET, 'Class_code');
+        $Type_code = filter_input(INPUT_GET, 'Type_code');
+        $Make = filter_input(INPUT_GET, 'Make');
         $Sort = filter_input(INPUT_GET, 'Sort');
         if ($Sort == 'year') {
             
            $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-            LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = :Class_code AND V.Make = :Make ORDER BY V.Vehicle_year DESC";   
+            LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = ? AND V.Make = ? ORDER BY V.Vehicle_year DESC";   
     } else {
         $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-            LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = :Class_code AND V.Make = :Make ORDER BY V.Price DESC";   
+            LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = ? AND V.Make = ? ORDER BY V.Price DESC";   
         
     }
     
         $statement = $db->prepare($query1);
-        $statement->bindValue(":Class_code", $Class_code);
-        $statement->bindValue(":Make", $Make);
+        $statement->bindValue(1, $Class_code, PDO::PARAM_INT);
+        $statement->bindValue(2, $Make, PDO::PARAM_STR);
         $statement->execute();
         $all_vehicles_list = $statement->fetchAll();
         $statement->closeCursor();
         return $all_vehicles_list;
     }    
-    } else if (($Class_code != NULL || $Class_code != FALSE) && ($Type_code != NULL || $Type_code != FALSE) && ($Make == NULL || $Make == FALSE) ) {
+    } else if (($Class_code != 0 || $Class_code != FALSE) && ($Type_code != 0 || $Type_code != FALSE) && ($Make == 0 || $Make == FALSE) ) {
 
-        function get_vehicles_by_selection($Class_code,$Type_code) {
+        function get_vehicles_by_selection($Class_code,$Type_code,$Make) {
             global $db;
             
             $Class_code = filter_input(INPUT_GET, 'Class_code');
-            $Type_code = filter_input(INPUT_GET, 'Type');
+            $Type_code = filter_input(INPUT_GET, 'Type_code');
+            $Make = filter_input(INPUT_GET, 'Make');
             $Sort = filter_input(INPUT_GET, 'Sort');
             if ($Sort == 'year') {
                 
                $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-                LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = :Class_code AND V.Type_code = :Type_code ORDER BY V.Vehicle_year DESC";   
+                LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = ? AND V.Type_code = ? ORDER BY V.Vehicle_year DESC";   
         } else {
             $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-                LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = :Class_code AND V.Type_code = :Type_code ORDER BY V.Price DESC";   
+                LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = ? AND V.Type_code = ? ORDER BY V.Price DESC";   
             
         }
         
             $statement = $db->prepare($query1);
-            $statement->bindValue(":Class_code", $Class_code);
-            $statement->bindValue(":Type_code", $Type_code);
+            $statement->bindValue(1, $Class_code, PDO::PARAM_INT);
+            $statement->bindValue(2, $Type_code, PDO::PARAM_INT );
             $statement->execute();
             $all_vehicles_list = $statement->fetchAll();
             $statement->closeCursor();
             return $all_vehicles_list;
         }    
-        } else if (($Class_code != NULL || $Class_code != FALSE) && ($Type_code == NULL || $Type_code == FALSE) && ($Make == NULL || $Make == FALSE) ) {
+        } else if (($Class_code != 0 || $Class_code != FALSE) && ($Type_code == 0 || $Type_code == FALSE) && ($Make == 0 || $Make == FALSE) ) {
 
-            function get_vehicles_by_selection($Class_code) {
+            function get_vehicles_by_selection($Class_code,$Type_code,$Make) {
                 global $db;
                 
                 $Class_code = filter_input(INPUT_GET, 'Class_code');
+                $Type_code = filter_input(INPUT_GET, 'Type_code');
+                $Make = filter_input(INPUT_GET, 'Make');
                 $Sort = filter_input(INPUT_GET, 'Sort');
                 if ($Sort == 'year') {
                     
                    $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-                    LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = :Class_code ORDER BY V.Vehicle_year DESC";   
+                    LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = ? ORDER BY V.Vehicle_year DESC";   
             } else {
                 $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-                    LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = :Class_code ORDER BY V.Price DESC";   
+                    LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Class_code = ? ORDER BY V.Price DESC";   
                 
             }
             
                 $statement = $db->prepare($query1);
-                $statement->bindValue(":Class_code", $Class_code);
+                $statement->bindValue(1, $Class_code, PDO::PARAM_INT);
                 $statement->execute();
                 $all_vehicles_list = $statement->fetchAll();
                 $statement->closeCursor();
                 return $all_vehicles_list;
             }    
-            } else if (($Class_code == NULL || $Class_code == FALSE) && ($Type_code != NULL || $Type_code != FALSE) && ($Make == NULL || $Make == FALSE) ) {
+            } else if (($Class_code == 0 || $Class_code == FALSE) && ($Type_code != 0 || $Type_code != FALSE) && ($Make == 0 || $Make == FALSE) ) {
 
-                function get_vehicles_by_selection($Type_code) {
+                function get_vehicles_by_selection($Class_code,$Type_code,$Make) {
                     global $db;
                     
-                    $Class_code = filter_input(INPUT_GET, 'Type_code');
+                    $Class_code = filter_input(INPUT_GET, 'Class_code');
+                    $Type_code = filter_input(INPUT_GET, 'Type_code');
+                    $Make = filter_input(INPUT_GET, 'Make');
                     $Sort = filter_input(INPUT_GET, 'Sort');
                     if ($Sort == 'year') {
                         
                        $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-                        LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Type_code = :Type_code ORDER BY V.Vehicle_year DESC";   
+                        LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Type_code = ? ORDER BY V.Vehicle_year DESC";   
                 } else {
                     $query1 = "SELECT V.Vehicle_id, V.Vehicle_year, V.Make, V.Model, V.Price, T.Type_name, C.Class_name FROM vehicles V LEFT JOIN classes C ON V.Class_code = C.Class_code 
-                        LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Type_code = :Type_code ORDER BY V.Price DESC";   
+                        LEFT JOIN types T ON V.Type_code = T.Type_code WHERE V.Type_code = ? ORDER BY V.Price DESC";   
                     
                 }
                 
                     $statement = $db->prepare($query1);
-                    $statement->bindValue(":Type_code", $Type_code);
+                    $statement->bindValue(1, $Type_code,PDO::PARAM_INT );
                     $statement->execute();
                     $all_vehicles_list = $statement->fetchAll();
                     $statement->closeCursor();
                     return $all_vehicles_list;
                 }    
-                }else if (($Class_code == NULL || $Class_code == FALSE) && ($Type_code == NULL || $Type_code == FALSE) && ($Make == NULL || $Make == FALSE) ) {
+                }else if (($Class_code == 0 || $Class_code == FALSE) && ($Type_code == 0 || $Type_code == FALSE) && ($Make == 0 || $Make == FALSE) ) {
 
-                    function get_vehicles_by_selection() {
+                    function get_vehicles_by_selection($Class_code,$Type_code,$Make) {
                         global $db;
                         
-                        
+                        $Class_code = filter_input(INPUT_GET, 'Class_code');
+                        $Type_code = filter_input(INPUT_GET, 'Type_code');
+                        $Make = filter_input(INPUT_GET, 'Make');
                         $Sort = filter_input(INPUT_GET, 'Sort');
                         if ($Sort == 'year') {
                             
