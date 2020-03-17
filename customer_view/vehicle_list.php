@@ -39,9 +39,9 @@
                 <label>Make:</label>
                 <select name="Make" >
                     <option onclick="hideMenu()" value="0">View All Makes</option>
-                    <?php foreach ($Vehicle_Makes as $Make) : ?>
-                        <option onclick="hideMenu()" value="<?php echo $Make['Make']; ?>">
-                            <?php echo $Make['Make']; ?>
+                    <?php foreach ($Vehicle_Makes as $Make_1) : ?>
+                        <option onclick="hideMenu()" value="<?php echo $Make_1['Make']; ?>">
+                            <?php echo $Make_1['Make']; ?>
                         </option>
                     <?php endforeach; ?>
                 </select> 
