@@ -66,26 +66,10 @@
        
       
 
-<h2><?php 
-if ($Class_code != NULL || $Class_code != FALSE) {
-    //$category_id = 1;
-    //$all_items = get_all_items();
-    //echo "All Vehicles";
-    //echo $Class_name;
-    //echo $Class['Class_code']; 
-} elseif ($Type_code != NULL || $Type_code != FALSE ){
-//echo $Type_name;
-}
-elseif ($Make != NULL || $Make != FALSE ){
-    //echo $Type_name;
-    }
-else{
-    echo "All Vehicles";
-    }
-
-
-        
-        ?>
+<?php if ( sizeof($Vehicles) == 0) { 
+    
+    echo "Your Search Returned 0 Results, Please Make a New Selection.";
+} else { ?>
 
     <section>    
         </h2>
@@ -115,15 +99,11 @@ else{
             <?php endforeach; ?>
         </table>
             </div>
-        
+         <?php } ?>
+    
     </section>
 </main>
 
-<script>
-function hideMenu() {
-    var x = document.getElementById("hide_select");
-    x.style.display = "none";
-}
-</script>
+
 
 <?php include '../view/footer.php'; ?>
