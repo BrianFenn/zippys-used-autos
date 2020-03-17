@@ -8,12 +8,11 @@
     <h1>Vehicle Inventory List</h1>
     <?php if ( sizeof($Vehicle_Classes) != 0) { ?>
                 <form action="." method="get" id="category_selection">
-                <div id="hide_select">
                 <label>Class:</label>
                 <select name="Class_code">
-                    <option  onclick="hideMenu()" value="0">View All Classes</option>
+                    <option value="0">View All Classes</option>
                     <?php foreach ($Vehicle_Classes as $Class) : ?>
-                        <option onclick="hideMenu()" value="<?php echo $Class['Class_code']; ?>">
+                        <option value="<?php echo $Class['Class_code']; ?>">
                             <?php echo $Class['Class_name']; ?>
                         </option>
                     <?php endforeach; ?>
@@ -22,12 +21,12 @@
             
 
             <?php if ( sizeof($Types) != 0) { ?>
-                
+                <form action="." method="get" id="category_selection">
                 <label>Type:</label>
                 <select name="Type_code">
-                    <option onclick="hideMenu()"  value="0">View All Types</option>
+                    <option value="0">View All Types</option>
                     <?php foreach ($Types as $Type) : ?>
-                        <option onclick="hideMenu()"  value="<?php echo $Type['Type_code']; ?>">
+                        <option value="<?php echo $Type['Type_code']; ?>">
                             <?php echo $Type['Type_name']; ?>
                         </option>
                     <?php endforeach; ?>
@@ -35,19 +34,16 @@
                 <?php } ?>
 
             <?php if ( sizeof($Vehicle_Makes) != 0) { ?>
-              
+                <form action="." method="get" id="category_selection">
                 <label>Make:</label>
-                <select name="Make" >
-                    <option onclick="hideMenu()" value="0">View All Makes</option>
-                    <?php foreach ($Vehicle_Makes as $Make) : ?>
-                        <option onclick="hideMenu()" value="<?php echo $Make['Make']; ?>">
-                            <?php echo $Make['Make']; ?>
+                <select name="Make">
+                    <option value="0">View All Makes</option>
+                    <?php foreach ($Vehicle_Makes as $Make_1) : ?>
+                        <option value="<?php echo $Make_1['Make']; ?>">
+                            <?php echo $Make_1['Make']; ?>
                         </option>
                     <?php endforeach; ?>
                 </select> 
-                        <!--END OF hide_select-->
-                        </div>
-
                 <p>Sort by:</p>
                     <input type="radio" id="category_selection" name="Sort" value="year">
                     <label for="year">Year</label><br>
@@ -60,33 +56,14 @@
                 </form>
             
 
-
-
         <!-- display a table of vehicles -->
        
-      
-
-<h2><?php 
-if ($Class_code != NULL || $Class_code != FALSE) {
-    //$category_id = 1;
-    //$all_items = get_all_items();
-    //echo "All Vehicles";
-    //echo $Class_name;
-    //echo $Class['Class_code']; 
-} elseif ($Type_code != NULL || $Type_code != FALSE ){
-//echo $Type_name;
-}
-elseif ($Make != NULL || $Make != FALSE ){
-    //echo $Type_name;
-    }
-else{
-    echo "All Vehicles";
-    }
-
-
-        
-        ?>
-
+<?php if ( sizeof($Vehicles) == 0) { 
+    
+    echo "Your Search Returned 0 Results, Please Make a New Selection.";
+} else { ?>
+                
+                
     <section>    
         </h2>
         <div id="table-scroll">
@@ -123,6 +100,9 @@ else{
             <?php endforeach; ?>
         </table>
             </div>
+
+            <?php } ?>
+
         <p class="last_paragraph">
             <a href="?action=show_add_form">Add Vehicle</a>
             <br>
@@ -134,12 +114,4 @@ else{
         </p>
     </section>
 </main>
-
-<script>
-function hideMenu() {
-    var x = document.getElementById("hide_select");
-    x.style.display = "none";
-}
-</script>
-
 <?php include 'view/footer.php'; ?>
