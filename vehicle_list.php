@@ -63,10 +63,9 @@
     echo "Your Search Returned 0 Results, Please Make a New Selection.";
 } else { ?>
                 
-                
+           <div id="table-scroll">      
     <section>    
-        </h2>
-        <div id="table-scroll">
+       
         <table>
             <tr>
                 
